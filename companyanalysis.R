@@ -60,6 +60,7 @@ ggplot(df2, aes(x=`Last Year Company Filed Returns`))+
   geom_histogram(fill = "green", bins = 30, color = "purple")+
   labs(title = "Distribution of last years company filed returns",
        x= "Last Year Company Filed Returns", y = "Count")
+
 #IMPUTING MISSING VALUES USING MEDIAN
 df2$`Last Year Company Filed Returns`[is.na(df2$`Last Year Company Filed Returns`)] <- median(df2$`Last Year Company Filed Returns`, na.rm = TRUE)
 
@@ -82,8 +83,28 @@ ggplot(df2, aes(x=`Number Of Shares`))+
 df2$`Number Of Shares`[is.na(df2$`Number Of Shares`)] <- median(df2$`Number Of Shares`, na.rm = TRUE)
 
 sum(is.na(df2$`Number Of Shares`))
+#########DATA TRANSFORMATION###########
+#We're gonna extract year from the registration dates
+df2$Reg_Year <- floor_date(df2$`Date of Registration`, unit = "year")
 
-df3 <-
+#Count registrations per year
+Yearly_registrations <- df2 %>%
+  group_by(Reg_Year)%>%
+  summarise(Company_Count =n())
+
+
+
+#######DATA VISUALIZATION###########
+#So this is the part where i put my insightsi nto actual understandable visualizations.
+#As stated in my word document
+#With this visualization i'm deriving the companies'ages.
+ggplot(df2, aes(x=Yearly_registrations, y= Company_Count))+
+  geom_line(color = "red",size = 1.2)+
+  geom_point(color ="blue", size = 2)+
+  labs(title ="Company Registrations over time", x ="Yearly Registrations", y ="Number of Companies")+
+  theme_minimal()
+
+
 
 
 
